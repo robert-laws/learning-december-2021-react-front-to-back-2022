@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import FeedbackList from './components/FeedbackList';
 import FeedbackData from './data/FeedbackData.js';
 import FeedbackStats from './components/FeedbackStats';
 import FeedbackForm from './components/FeedbackForm';
+import About from './pages/About';
 import { v4 as uuidv4 } from 'uuid';
 
 function App() {
@@ -21,7 +23,7 @@ function App() {
   };
 
   return (
-    <>
+    <Router>
       <Header />
       <div className='container'>
         <FeedbackForm handleAdd={addFeedback} />
@@ -29,7 +31,7 @@ function App() {
         <h1>My App</h1>
         <FeedbackList feedback={feedback} handleDelete={deleteFeedback} />
       </div>
-    </>
+    </Router>
   );
 }
 
