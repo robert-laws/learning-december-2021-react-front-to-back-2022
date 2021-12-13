@@ -1,11 +1,17 @@
 import { useState, useEffect } from 'react';
 
-function RatingSelect({ select }) {
+function RatingSelect({ select, selectValue }) {
   const [selected, setSelected] = useState(10);
 
   const handleChange = (e) => {
     setSelected(+e.target.value);
   };
+
+  useEffect(() => {
+    if (selectValue) {
+      setSelected(selectValue);
+    }
+  }, [selectValue]);
 
   useEffect(() => {
     select(selected);

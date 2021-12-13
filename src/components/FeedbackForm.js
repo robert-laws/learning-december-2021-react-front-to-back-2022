@@ -1,6 +1,5 @@
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import FeedbackContext from '../context/FeedbackContext';
-import { useState, useEffect } from 'react';
 import { Card, Button } from './shared';
 import RatingSelect from './RatingSelect';
 
@@ -10,11 +9,20 @@ function FeedbackForm() {
   const [btnDisabled, setBtnDisabled] = useState(true);
   const [message, setMessage] = useState('');
 
-  const { addFeedback } = useContext(FeedbackContext);
+  const { addFeedback, feedbackEdit, updateFeedback } =
+    useContext(FeedbackContext);
 
   const handleTextChange = (e) => {
     setText(e.target.value);
   };
+
+  useEffect(() => {
+    if (feedbackEdit.edit) {
+      setBtnDisabled(false);
+      setText(feedbackEdit.item.text);
+      setRating(feedbackEdit.item.rating);
+    }
+  }, [feedbackEdit]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,7 +33,11 @@ function FeedbackForm() {
         rating,
       };
 
-      addFeedback(newFeedback);
+      if (feedbackEdit.edit) {
+        updateFeedback(feedbackEdit.item.id, newFeedback);
+      } else {
+        addFeedback(newFeedback);
+      }
 
       setText('');
       setRating(10);
@@ -49,7 +61,10 @@ function FeedbackForm() {
     <Card>
       <form onSubmit={handleSubmit}>
         <h2>How would you rate your service with us?</h2>
-        <RatingSelect select={(rating) => setRating(rating)} />
+        <RatingSelect
+          select={(rating) => setRating(rating)}
+          selectValue={feedbackEdit.item?.rating || 0}
+        />
         <div className='input-group'>
           <input
             type='text'
